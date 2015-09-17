@@ -1,0 +1,17 @@
+tasks:
+  Sort_Unpacked_Movies:
+    find:
+      path: '/mnt/hdd/torrents/completed/'
+      regexp: '.*\.(avi|mkv|mpg|mp4|m4v)$'
+      recursive: yes
+    imdb_lookup: yes
+    tmdb_lookup: yes
+    #rottentomatoes_lookup: yes
+    proper_movies: yes
+    require_field: [movie_name, movie_year]
+    move:
+      to: >
+        /mnt/hdd/media/Video/Movies/{{ movie_name|replace('/', '_')|replace(':', ' -')|replace(',', '') }} ({{ movie_year }})/
+      filename: >
+        {{ movie_name|replace('/', '_')|replace(':', ' -')|replace(',', '') }} ({{ movie_year }}) - {{ quality }}.{{ location[-3:] }}
+      clean_source: 1000

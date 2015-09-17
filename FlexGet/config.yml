@@ -1,7 +1,8 @@
+secrets: secretfile.yml
 tasks:
   # downloading task
   download-rss:
-    rss:  http://showrss.info/rss.php?user_id=147166&hd=null&proper=1&raw=true
+    rss:  http://showrss.info/rss.php?user_id={{ secrets.showrss.ano }}&hd=null&proper=1&raw=true
     # fetch all the feed series
     all_series: yes
     # use deluge to download the torrents
@@ -41,10 +42,10 @@ tasks:
       from: RasPi
       subject: Shows Ready to Watch
       to:
-        - acordill@gmail.com
+        - {{ secrets.gmail.to }}
       smtp_host: smtp.gmail.com
       smtp_port: 587
       smtp_login: True
-      smtp_username: rs9642@gmail.com
-      smtp_password: radio1
+      smtp_username: {{ secrets.gmail.user }}
+      smtp_password: {{ secrets.gmail.password }}
       smtp_tls: true

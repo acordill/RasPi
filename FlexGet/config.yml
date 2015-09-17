@@ -42,10 +42,10 @@ tasks:
       from: RasPi
       subject: Shows Ready to Watch
       to:
-        - {{ secrets.gmail.to }}
+        - '{{ secrets.gmail.to }}'
       smtp_host: smtp.gmail.com
       smtp_port: 587
       smtp_login: True
-      smtp_username: {{ secrets.gmail.user }}
-      smtp_password: {{ secrets.gmail.password }}
+      smtp_username: '{{ secrets.gmail.user }}'
+      smtp_password: '{{ secrets.gmail.password }}'
       smtp_tls: true

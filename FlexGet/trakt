@@ -1,0 +1,15 @@
+tasks:
+  watchlist:
+    priority: 1
+    interval: 2 hours
+    trakt_list:
+      api_key: myapikey
+      username: myusername
+      movies: watchlist
+    #imdb_list:
+      #list: watchlist
+      #username: me@somewhere.com
+      #password: mypassword
+    accept_all: yes
+    seen: local  # We don't want accepted movies on this feed to affect actual download feed
+    queue_movies: yes

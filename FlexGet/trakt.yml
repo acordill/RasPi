@@ -1,3 +1,4 @@
+secrets: secretfile.yml
 tasks:
   watchlist:
     priority: 1

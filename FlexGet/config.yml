@@ -2,6 +2,7 @@ secrets: secretfile.yml
 tasks:
   # downloading task
   download-rss:
+    priority: 1
     rss:  http://showrss.info/rss.php?user_id={{ secrets.showrss.ano }}&hd=null&proper=1&raw=true
     # fetch all the feed series
     all_series: yes
@@ -13,6 +14,7 @@ tasks:
       keep_subs: yes
   # sorting task
   sort-files:
+    priority: 2
     find:
       # directory with the files to be sorted
       path: /mnt/hdd/deluge/flexget/

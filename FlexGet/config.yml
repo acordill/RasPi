@@ -1,53 +1,37 @@
 secrets: secretfile.yml
 tasks:
-  # downloading task
-  download-rss:
-    priority: 1
-    rss:  http://showrss.info/rss.php?user_id={{ secrets.showrss.ano }}&hd=null&proper=1&raw=true
-    # fetch all the feed series
+  task-a:
+    rss:  http://showrss.info/rss.php?user_id={{ secrets.showrss.ano }}&hd=null&proper=1&raw=true&magnets=false
     all_series: yes
-    # use deluge to download the torrents
-    deluge:
-      path: /mnt/hdd/deluge/incomplete
-      movedone: /mnt/hdd/deluge/flexget/{{series_name}}/
-      main_file_only: yes
-      keep_subs: yes
-  # sorting task
-  sort-files:
-    priority: 2
-    find:
-      # directory with the files to be sorted
-      path: /mnt/hdd/deluge/flexget/
-      # fetch all avi, mkv and mp4 files, skips the .part files (unfinished torrents)
-      regexp: '.*\.(avi|mkv|mp4)$'
-      recursive: yes
-    accept_all: yes
-    seen: local
-    # this is needed for the episode names
     thetvdb_lookup: yes
-    all_series:
-      # all_series rejects all episodes here, even with seen: local, so parse_only must be added
-      parse_only: yes
-    # TVDB doesn't recognise every show so you must add those here manually
-   # series:
-    #  - Agents of S.H.I.E.L.D.
-    move:
-      # this is where the series will be stored
-      to: /mnt/hdd/media/Video/TV/{{ series_name }}/Season {{ series_season }}
-      # save the file as "Series Name - SxxEyy - Episode Name.ext"
-      filename: '{{ series_name }} - {{ series_id }} - {{ tvdb_ep_name|default(False) }}{{ location | pathext }}'
-      clean_source: 100    
-
-    # Send an email
+    pathscrub: windows
+    set:
+      magnets: no
+      skip_files:
+        - '*.nfo'
+        - '*.sfv'
+        - '*[sS]ample*'
+        - '*.txt'
+    transmission:
+      host: localhost
+      port: 9091
+      username: '{{ secrets.transmission.username }}'
+      password: '{{ secrets.transmission.password }}'
+      main_file_only: true
+      content_filename: '{{ tvdb_series_name }} - {{ tvdb_season }}x{{ tvdb_episode|pad(2) }} - {{ tvdb_ep_name|default('''') }}'
+      path: /mnt/hdd/media/Video/TV/{{series_name}}/Season {{series_season}}
+      addpaused: no
     email:
       template: html
       from: RasPi
       subject: Shows Ready to Watch
       to:
         - '{{ secrets.gmail.to }}'
+        - '{{ secrets.gmail.to2 }}'
       smtp_host: smtp.gmail.com
       smtp_port: 587
       smtp_login: True
       smtp_username: '{{ secrets.gmail.user }}'
       smtp_password: '{{ secrets.gmail.password }}'
       smtp_tls: true
+

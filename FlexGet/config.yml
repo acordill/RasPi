@@ -40,7 +40,7 @@ tasks:
     priority: 20 # run before the movie search task
     pathscrub: windows
     imdb_list:
-      user_id: {{ secrets.imdb.userid }}
+      user_id: '{{ secrets.imdb.userid }}'
       list: watchlist
     imdb_lookup: yes
     tmdb_lookup: yes

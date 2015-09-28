@@ -62,6 +62,12 @@ tasks:
       from:
         - isohunt: movies
         - torrentz: verified
+        - kat:
+            category: movies
+            verified: yes
+        - piratebay:
+            category: movies
+            sort_by: seeds
       interval: 1 days
     torrent_alive: 10 # Will reject results with less than 10 seeds
     quality: dvdrip+ # Make sure no screeners or cams are downloaded

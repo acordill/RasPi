@@ -1,6 +1,7 @@
 secrets: secretfile.yml
 tasks:
   task-a:
+    priority: 10
     rss:  http://showrss.info/rss.php?user_id={{ secrets.showrss.ano }}&hd=null&proper=1&raw=true&magnets=false
     all_series: yes
     thetvdb_lookup: yes
@@ -34,4 +35,66 @@ tasks:
       smtp_username: '{{ secrets.gmail.user }}'
       smtp_password: '{{ secrets.gmail.password }}'
       smtp_tls: true
+  #task to pull movies from imdb.com watchlist and add to the movie queue
+  imdb_movie_queue_fill:
+    priority: 20 # run before the movie search task
+    pathscrub: windows
+    imdb_list:
+      user_id: ur31908567
+      list: watchlist
+    imdb_lookup: yes
+    tmdb_lookup: yes
+    set:
+      title: "{{ movie_name }} ({{ movie_year }})"
+      tmdb_id: '{{ tmdb_id }}'
+    seen: local
+    movie_queue:
+      action: add
+      quality: 1080p bluray h264+
+    accept_all: yes
+
+  # task that automatically generates an rss feed based on entries from the movie_queue
+  movies search:
+    priority: 30 # run after the movie queue fill task
+    discover:
+      what:
+        - emit_movie_queue: yes
+      from:
+        - isohunt: movies
+        - torrentz: verified
+      interval: 1 days
+    torrent_alive: 10 # Will reject results with less than 10 seeds
+    quality: dvdrip+ # Make sure no screeners or cams are downloaded
+    movie_queue: accept
+    transmission: #yes  You could use another output plugin instead of this (deluge, download)
+      host: localhost
+      port: 9091
+      username: '{{ secrets.transmission.username }}'
+      password: '{{ secrets.transmission.password }}'
+      main_file_only: true
+      content_filename: '{{ imdb_name }} ({{ imdb_year }}) - {{ quality|upper }}}}'
+      path: /mnt/hdd/media/Video/Movies
+      addpaused: no
+    clean_transmission:
+      host: localhost
+      port: 9091
+      username: '{{ secrets.transmission.username }}'
+      password: '{{ secrets.transmission.password }}'
+      finished_for: 2 hours
+      min_ratio: 2
+    disable: [details]
+    email:
+      template: html
+      from: RasPi
+      subject: Movies Being Downloaded
+      to:
+        - '{{ secrets.gmail.to }}'
+        - '{{ secrets.gmail.to2 }}'
+      smtp_host: smtp.gmail.com
+      smtp_port: 587
+      smtp_login: True
+      smtp_username: '{{ secrets.gmail.user }}'
+      smtp_password: '{{ secrets.gmail.password }}'
+      smtp_tls: true
+
 

@@ -68,6 +68,10 @@ tasks:
         - piratebay:
             category: movies
             sort_by: seeds
+        - rarbg:
+            category:
+              - x264 720p
+              - x264 1080p
       interval: 1 days
     torrent_alive: 10 # Will reject results with less than 10 seeds
     quality: dvdrip+ # Make sure no screeners or cams are downloaded
